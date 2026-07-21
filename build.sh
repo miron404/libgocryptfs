@@ -30,7 +30,7 @@ else
       fi
 
       export CFLAGS=-D__ANDROID_API__=21
-      export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
+      export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
       (
         cd "$OPENSSL_PATH"
         export ANDROID_NDK_ROOT="$ANDROID_NDK_HOME"

@@ -1,6 +1,6 @@
 module libgocryptfs/v2
 
-go 1.19
+go 1.21
 
 godebug asyncpreemptoff=1
 

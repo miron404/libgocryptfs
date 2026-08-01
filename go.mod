@@ -2,6 +2,8 @@ module libgocryptfs/v2
 
 go 1.19
 
+godebug asyncpreemptoff=1
+
 require (
 	github.com/aperturerobotics/jacobsa-crypto v1.1.0
 	github.com/rfjakob/eme v1.1.2

@@ -114,6 +114,7 @@ func registerNewVolume(rootCipherDir string, masterkey []byte, cf *configfile.Co
 
 //export gcf_init
 func gcf_init(rootCipherDir string, password, givenScryptHash, returnedScryptHashBuff []byte) int {
+	rootCipherDir = fromCString(rootCipherDir)
 	defer wipe(password)
 	cf, err := configfile.Load(filepath.Join(rootCipherDir, configfile.ConfDefaultName))
 	if err != nil {
@@ -158,6 +159,7 @@ func gcf_is_closed(volumeID int) bool {
 
 //export gcf_change_password
 func gcf_change_password(rootCipherDir string, oldPassword, givenScryptHash, newPassword, returnedScryptHashBuff []byte) bool {
+	rootCipherDir = fromCString(rootCipherDir)
 	success := false
 	cf, err := configfile.Load(filepath.Join(rootCipherDir, configfile.ConfDefaultName))
 	if err == nil {
@@ -181,6 +183,8 @@ func gcf_change_password(rootCipherDir string, oldPassword, givenScryptHash, new
 
 //export gcf_create_volume
 func gcf_create_volume(rootCipherDir string, password []byte, plaintextNames bool, xchacha int8, logN int, creator string, returnedScryptHashBuff []byte) bool {
+	rootCipherDir = fromCString(rootCipherDir)
+	creator = fromCString(creator)
 	var useXChaCha bool
 	switch xchacha {
 	case 1:

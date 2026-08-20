@@ -369,6 +369,7 @@ func (volume *Volume) truncate(handleID int, newSize uint64) bool {
 
 //export gcf_open_read_mode
 func gcf_open_read_mode(sessionID int, path string) int {
+	path = fromCString(path)
 	value, ok := OpenedVolumes.Load(sessionID)
 	if !ok {
 		return -1
@@ -390,6 +391,7 @@ func gcf_open_read_mode(sessionID int, path string) int {
 
 //export gcf_open_write_mode
 func gcf_open_write_mode(sessionID int, path string, mode uint32) int {
+	path = fromCString(path)
 	value, ok := OpenedVolumes.Load(sessionID)
 	if !ok {
 		return -1
@@ -427,6 +429,7 @@ func gcf_open_write_mode(sessionID int, path string, mode uint32) int {
 
 //export gcf_truncate
 func gcf_truncate(sessionID int, path string, offset uint64) bool {
+	path = fromCString(path)
 	value, ok := OpenedVolumes.Load(sessionID)
 	if !ok {
 		return false
@@ -512,6 +515,7 @@ func gcf_close_file(sessionID, handleID int) {
 
 //export gcf_remove_file
 func gcf_remove_file(sessionID int, path string) bool {
+	path = fromCString(path)
 	value, ok := OpenedVolumes.Load(sessionID)
 	if !ok {
 		return false

@@ -34,6 +34,31 @@ func gcf_get_attrs(sessionID int, relPath string) (uint32, uint64, uint64, bool)
 	return st.Mode, size, uint64(st.Mtim.Sec), true
 }
 
+// libgocryptfs: added for DroidFS, so that importing a file can keep the modification
+// time it had outside the volume.
+//
+// Only the modification time is restored: the access time is left to the kernel, and
+// creation time cannot be set on Linux at all.
+//export gcf_set_mtime
+func gcf_set_mtime(sessionID int, relPath string, mtimeNanos int64) bool {
+	relPath = fromCString(relPath)
+	value, ok := OpenedVolumes.Load(sessionID)
+	if !ok {
+		return false
+	}
+	volume := value.(*Volume)
+	dirfd, cName, err := volume.prepareAtSyscall(relPath)
+	if err != nil {
+		return false
+	}
+	defer syscall.Close(dirfd)
+
+	times := make([]unix.Timespec, 2)
+	times[0].Nsec = unix.UTIME_OMIT // atime: leave alone
+	times[1] = unix.NsecToTimespec(mtimeNanos)
+	return errToBool(unix.UtimesNanoAt(dirfd, cName, times, unix.AT_SYMLINK_NOFOLLOW))
+}
+
 // libgocryptfs: using Renameat instead of Renameat2 to support older kernels
 //export gcf_rename
 func gcf_rename(sessionID int, oldPath string, newPath string) bool {
